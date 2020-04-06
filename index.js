@@ -18,8 +18,8 @@ async function waitAndFunc(page, func) {
 }
 
 async function crawl() {
-	const browser = await puppeteer.launch({ headless: false }); // headless as false
-	// const browser = await puppeteer.launch();
+	// const browser = await puppeteer.launch({ headless: false }); // headless as false
+	const browser = await puppeteer.launch();
 
 	const page = await browser.newPage();
 	await page.goto(URL_HOMEPAGE);
