@@ -17,7 +17,7 @@ async function waitAndFunc(page, func) {
 	await func();
 }
 
-(async () => {
+(async function crawl() {
 	// const browser = await puppeteer.launch({ headless: false }); // headless as false
 	const browser = await puppeteer.launch();
 
@@ -51,6 +51,7 @@ async function waitAndFunc(page, func) {
 	await waitAndClick(page, 'a[name="proceedToCheckout"]');
 
 	while (1) {
+		console.log('current URL:', page.url());
 		await intervalFunc(page);
 		const intervalMin =
 			Math.round(
@@ -68,21 +69,29 @@ async function waitAndFunc(page, func) {
 	// await browser.close();
 })();
 
-async function checkProcess(page) {
-	await page.reload({ waitUntil: [ 'networkidle0', 'domcontentloaded' ] });
+async function checkIfElementExist(page, selector) {
 	try {
-		await page.waitForSelector('.ufss-slotselect-unavailable-alert-container', { timeout: 5000 });
+		await page.waitForSelector(selector, { timeout: 5000 });
 		return false;
 	} catch (error) {
 		return true;
 	}
 }
 
+async function checkProcess(page) {
+	await page.reload({ waitUntil: [ 'networkidle0', 'domcontentloaded' ] });
+	return await checkIfElementExist('.ufss-slotselect-unavailable-alert-container');
+}
+
 async function intervalFunc(page) {
 	const hasSlot = await checkProcess(page);
-	if (hasSlot) {
-		console.log('has slot!!!!!!');
+	if (checkIfElementExist('[class^="ufss"]')) {
+		if (hasSlot) {
+			console.log('has slot!!!!!!');
+		} else {
+			console.log('no slot');
+		}
 	} else {
-		console.log('no slot');
+		crawl();
 	}
 }
