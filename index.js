@@ -18,8 +18,8 @@ async function waitAndFunc(page, func) {
 }
 
 (async function crawl() {
-	// const browser = await puppeteer.launch({ headless: false }); // headless as false
-	const browser = await puppeteer.launch();
+	const browser = await puppeteer.launch({ headless: false }); // headless as false
+	// const browser = await puppeteer.launch();
 
 	const page = await browser.newPage();
 	await page.goto(URL_HOMEPAGE);
@@ -72,20 +72,21 @@ async function waitAndFunc(page, func) {
 async function checkIfElementExist(page, selector) {
 	try {
 		await page.waitForSelector(selector, { timeout: 5000 });
-		return false;
-	} catch (error) {
 		return true;
+	} catch (error) {
+		return false;
 	}
 }
 
 async function checkProcess(page) {
 	await page.reload({ waitUntil: [ 'networkidle0', 'domcontentloaded' ] });
-	return await checkIfElementExist('.ufss-slotselect-unavailable-alert-container');
+	return await !checkIfElementExist(page, '.ufss-slotselect-unavailable-alert-container');
 }
 
 async function intervalFunc(page) {
 	const hasSlot = await checkProcess(page);
-	if (checkIfElementExist('[class^="ufss"]')) {
+	const pageCorrect = await checkIfElementExist(page, '[class^="ufss"]');
+	if (pageCorrect) {
 		if (hasSlot) {
 			console.log('has slot!!!!!!');
 		} else {
