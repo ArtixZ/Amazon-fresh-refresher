@@ -9,7 +9,10 @@ const URL_HOMEPAGE = 'https://www.amazon.com';
 const CHECK_INTERVAL_MIN_RANGE = [ 1, 5 ]; // 1 - 5min
 
 function waitAndClick(page, selector, waitOptions = {}, clickOptions = {}) {
-	return Promise.all([ page.waitForNavigation(waitOptions), page.click(selector, clickOptions) ]);
+	return Promise.all([
+		page.waitForNavigation({ waitUntil: [ 'networkidle0' ], ...waitOptions }),
+		page.click(selector, clickOptions)
+	]);
 }
 
 async function waitAndFunc(page, func) {
