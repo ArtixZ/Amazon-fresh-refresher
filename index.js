@@ -17,7 +17,7 @@ async function waitAndFunc(page, func) {
 	await func();
 }
 
-(async function crawl() {
+async function crawl() {
 	const browser = await puppeteer.launch({ headless: false }); // headless as false
 	// const browser = await puppeteer.launch();
 
@@ -67,7 +67,7 @@ async function waitAndFunc(page, func) {
 
 	console.log();
 	// await browser.close();
-})();
+}
 
 async function checkIfElementExist(page, selector) {
 	try {
@@ -96,3 +96,4 @@ async function intervalFunc(page) {
 		crawl();
 	}
 }
+crawl();
