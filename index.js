@@ -10,8 +10,8 @@ const CHECK_INTERVAL_MIN_RANGE = [ 1, 5 ]; // 1 - 5min
 
 function waitAndClick(page, selector, waitOptions = {}, clickOptions = {}) {
 	return Promise.all([
-		page.waitForNavigation({ waitUntil: [ 'networkidle0' ], ...waitOptions }),
-		page.click(selector, clickOptions)
+		page.click(selector, clickOptions),
+		page.waitForNavigation({ waitUntil: [ 'networkidle0' ], ...waitOptions })
 	]);
 }
 
@@ -22,7 +22,7 @@ async function waitAndFunc(page, func) {
 
 async function crawl() {
 	// const browser = await puppeteer.launch({ headless: false }); // headless as false
-	const browser = await puppeteer.launch({ args: [ '--no-sandbox' ], executablePath: '/usr/bin/chromium-browser' }); // for linux
+	const browser = await puppeteer.launch({ args: [ '--no-sandbox' ] }); // for linux
 
 	const page = await browser.newPage();
 	await page.goto(URL_HOMEPAGE);
@@ -96,6 +96,7 @@ async function intervalFunc(page) {
 			console.log('no slot');
 		}
 	} else {
+		await browser.close();
 		crawl();
 	}
 }
