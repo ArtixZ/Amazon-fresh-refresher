@@ -55,7 +55,7 @@ async function crawl() {
 
 	while (1) {
 		console.log('current URL:', page.url());
-		await intervalFunc(page);
+		await intervalFunc(page, browser);
 		const intervalMin =
 			Math.round(
 				(CHECK_INTERVAL_MIN_RANGE[0] + CHECK_INTERVAL_MIN_RANGE[1] * Math.random() + Number.EPSILON) * 100
@@ -86,7 +86,7 @@ async function checkProcess(page) {
 	return await !checkIfElementExist(page, '.ufss-slotselect-unavailable-alert-container');
 }
 
-async function intervalFunc(page) {
+async function intervalFunc(page, browser) {
 	const hasSlot = await checkProcess(page);
 	const pageCorrect = await checkIfElementExist(page, '[class^="ufss"]');
 	if (pageCorrect) {
