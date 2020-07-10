@@ -9,6 +9,7 @@ const URL_HOMEPAGE = 'https://www.amazon.com';
 const CHECK_INTERVAL_MIN_RANGE = [ 1, 5 ]; // 1 - 5min
 
 function waitAndClick(page, selector, waitOptions = {}, clickOptions = {}) {
+	console.log('clicking on', selector);
 	return Promise.all([
 		page.click(selector, clickOptions),
 		page.waitForNavigation({ waitUntil: [ 'networkidle0' ], ...waitOptions })
@@ -22,8 +23,11 @@ async function waitAndFunc(page, func) {
 
 async function crawl() {
 	// const browser = await puppeteer.launch({ headless: false }); // headless as false
-	const browser = await puppeteer.launch({ executablePath: 'chromium-browser' }); // for linux. install with `sudo apt install chromium-browser`
-
+	let browser;
+	if (process.platform === 'win32') browser = await puppeteer.launch({ headless: false });
+	else if (process.platform === 'linux')
+		// for linux. install with `sudo apt install chromium-browser`
+		browser = await puppeteer.launch({ executablePath: 'chromium-browser' }); // for linux. install with `sudo apt install chromium-browser`
 	const page = await browser.newPage();
 	await page.goto(URL_HOMEPAGE);
 
