@@ -2,7 +2,7 @@ const fs = require('fs');
 
 const { username, password } = JSON.parse(fs.readFileSync(require.resolve('./config.json')));
 
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
 
 const URL_FRESH = 'https://www.amazon.com/gp/buy/shipoptionselect/handlers/display.html?hasWorkingJavascript=1';
 const URL_HOMEPAGE = 'https://www.amazon.com';
@@ -22,7 +22,7 @@ async function waitAndFunc(page, func) {
 
 async function crawl() {
 	// const browser = await puppeteer.launch({ headless: false }); // headless as false
-	const browser = await puppeteer.launch({ args: [ '--no-sandbox' ] }); // for linux
+	const browser = await puppeteer.launch({ executablePath: 'chromium-browser' }); // for linux. install with `sudo apt install chromium-browser`
 
 	const page = await browser.newPage();
 	await page.goto(URL_HOMEPAGE);
