@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 
 const { username, password } = JSON.parse(fs.readFileSync(require.resolve('./config.json')));
 
@@ -13,7 +14,20 @@ function waitAndClick(page, selector, waitOptions = {}, clickOptions = {}) {
 	return Promise.all([
 		page.click(selector, clickOptions),
 		page.waitForNavigation({ waitUntil: [ 'networkidle0' ], ...waitOptions })
-	]);
+	]).catch(() => {
+		page.screenshot({
+			fullPage: true,
+			path: path.join(
+				__dirname,
+				`screenshot${new Date()
+					.toLocaleString()
+					.replace(',', '')
+					.replace(/:/g, '_')
+					.replace(/\ /g, '_')
+					.replace(/\\|\//g, '-')}.png`
+			)
+		});
+	});
 }
 
 async function waitAndFunc(page, func) {
